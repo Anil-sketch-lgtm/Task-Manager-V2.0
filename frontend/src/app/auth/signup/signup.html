@@ -1,0 +1,40 @@
+<div class="glass-card auth-card">
+  <h2>Create Account</h2>
+  <p class="subtitle">Join Smart Prioritizer today</p>
+  
+  @if (errorMsg()) {
+    <div class="error-banner">{{ errorMsg() }}</div>
+  }
+  @if (successMsg()) {
+    <div class="success-banner">{{ successMsg() }}</div>
+  }
+
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" formControlName="name" placeholder="Enter your name" />
+      @if (signupForm.get('name')?.invalid && signupForm.get('name')?.touched) {
+        <small class="validation-error">Name is required.</small>
+      }
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" formControlName="email" placeholder="Enter your email" />
+      @if (signupForm.get('email')?.invalid && signupForm.get('email')?.touched) {
+        <small class="validation-error">Please enter a valid email address.</small>
+      }
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" formControlName="password" placeholder="Create a password" />
+      @if (signupForm.get('password')?.invalid && signupForm.get('password')?.touched) {
+        <small class="validation-error">Password must be at least 6 characters.</small>
+      }
+    </div>
+    <button type="submit" class="btn-primary full-width" [disabled]="signupForm.invalid">Sign Up</button>
+  </form>
+
+  <p class="auth-footer">
+    Already have an account? <a routerLink="/login">Log in</a>
+  </p>
+</div>

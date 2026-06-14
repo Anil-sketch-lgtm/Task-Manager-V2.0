@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int             @id @default(autoincrement())
+  name          String
+  email         String          @unique
+  passwordHash  String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  tasks         Task[]
+  focusSessions FocusSession[]
+  behaviors     UserBehavior[]
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  title       String
+  description String?
+  deadline    DateTime?
+  priority    Int       @default(1) // e.g., 1=Low, 2=Medium, 3=High
+  status      String    @default("pending") // "pending", "completed"
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  behaviors   UserBehavior[]
+}
+
+model FocusSession {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  startTime     DateTime
+  endTime       DateTime?
+  interruptions Int      @default(0)
+  createdAt     DateTime @default(now())
+}
+
+model UserBehavior {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  taskId         Int
+  task           Task     @relation(fields: [taskId], references: [id])
+  completionTime Int?     // time taken in minutes
+  delayFactor    Float?   // calculated based on deadline vs completion
+  createdAt      DateTime @default(now())
+}

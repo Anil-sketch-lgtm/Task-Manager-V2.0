@@ -1,0 +1,24 @@
+<div class="glass-card auth-card">
+  <h2>Welcome Back</h2>
+  <p class="subtitle">Log in to manage your tasks</p>
+  
+  @if (errorMsg()) {
+    <div class="error-banner">{{ errorMsg() }}</div>
+  }
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" formControlName="email" placeholder="Enter your email" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" formControlName="password" placeholder="Enter your password" />
+    </div>
+    <button type="submit" class="btn-primary full-width" [disabled]="loginForm.invalid">Log In</button>
+  </form>
+
+  <p class="auth-footer">
+    Don't have an account? <a routerLink="/signup">Sign up</a>
+  </p>
+</div>

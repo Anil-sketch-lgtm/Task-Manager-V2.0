@@ -1,0 +1,105 @@
+<nav class="navbar">
+  <div class="logo">
+    <span class="gradient-text">Smart</span> Prioritizer
+  </div>
+  <div class="nav-links">
+    @if (authService.isAuthenticated()) {
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/focus-mode" routerLinkActive="active">Focus Mode</a>
+      <div class="profile-container">
+        <span class="username">{{ authService.currentUser()?.name }}</span>
+        <div class="avatar" (click)="toggleDropdown($event)">
+          {{ getInitials() }}
+        </div>
+        @if (isDropdownOpen()) {
+          <div class="profile-dropdown">
+            <button class="dropdown-item" (click)="openEditProfileModal()">Edit Profile</button>
+            <button class="dropdown-item" (click)="openChangePasswordModal()">Change Password</button>
+            <button class="dropdown-item logout" (click)="logout()">Logout</button>
+          </div>
+        }
+      </div>
+    } @else {
+      <a routerLink="/login" class="btn-primary" routerLinkActive="active">Login</a>
+    }
+  </div>
+</nav>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Edit Profile Modal -->
+@if (isProfileModalOpen()) {
+  <div class="modal-backdrop" (click)="closeEditProfileModal()">
+    <div class="glass-card modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Edit Profile</h3>
+        <button class="btn-close" (click)="closeEditProfileModal()">×</button>
+      </div>
+      
+      @if (profileErrorMsg()) {
+        <div class="error-banner">{{ profileErrorMsg() }}</div>
+      }
+      @if (profileSuccessMsg()) {
+        <div class="success-banner">{{ profileSuccessMsg() }}</div>
+      }
+
+      <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" formControlName="name" placeholder="Your name" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email" placeholder="Your email" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="closeEditProfileModal()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="profileForm.invalid">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Change Password Modal -->
+@if (isPasswordModalOpen()) {
+  <div class="modal-backdrop" (click)="closeChangePasswordModal()">
+    <div class="glass-card modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Change Password</h3>
+        <button class="btn-close" (click)="closeChangePasswordModal()">×</button>
+      </div>
+      
+      @if (passwordErrorMsg()) {
+        <div class="error-banner">{{ passwordErrorMsg() }}</div>
+      }
+      @if (passwordSuccessMsg()) {
+        <div class="success-banner">{{ passwordSuccessMsg() }}</div>
+      }
+
+      <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" formControlName="currentPassword" placeholder="Current password" />
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" formControlName="newPassword" placeholder="New password (min 6 characters)" />
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" formControlName="confirmPassword" placeholder="Confirm new password" />
+          @if (changePasswordForm.errors?.['mismatch'] && changePasswordForm.get('confirmPassword')?.touched) {
+            <span class="validation-error">Passwords do not match</span>
+          }
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" (click)="closeChangePasswordModal()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="changePasswordForm.invalid">Change Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

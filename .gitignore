@@ -1,0 +1,39 @@
+# Node/npm dependency directories
+node_modules/
+**/node_modules/
+
+# Python virtual environment and caches
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Local environment variables
+.env
+**/.env
+
+# Build outputs
+dist/
+**/dist/
+.angular/
+**/.angular/
+
+# SQLite database files
+*.db
+*.db-journal
+**/dev.db
+**/dev.db-journal
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
